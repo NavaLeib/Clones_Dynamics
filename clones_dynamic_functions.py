@@ -85,8 +85,6 @@ class Model:
 
             RR = (np.concatenate((np.array([0]), (np.cumsum(np.concatenate((RxPlus, RxMinus))))))) / Rtotal
 
-            import matplotlib.pyplot as plt
-
             # i = list(abs(RR - r)).index(min(abs(RR - r)))
             temp1 = np.where(r >= np.array(RR))
             temp2 = np.where(r < np.array(RR))
@@ -123,85 +121,86 @@ class Model:
 
         return X_X
 
+def mean_field():
+    """
+    generate and plot the mean field (deterministic) solution.
+    :argument:
+    :var:
 
-#
-# MEAN FIELD : (TO ORGANIZE)
-# Int_opt = np.zeros(8)
-# alpha_opt = np.zeros(8)
-#
-# np.seterr(divide='ignore', invalid='ignore')
-#
-# mutant_percent=0.01
-# m0=mutant_percent
-# g1 = (math.log(2) / 16)-(-math.log(0.9791) / 16)
-# g0 = (math.log(2) / 16)-(-math.log(0.8) / 16)
-# N0 = 1
-#
-# Int=0 #no interactions
-# alpha=1 #no plating efficiency
-#
-#
-# def func(i, g1, Int, mt_perc, Nt, time):
-#     # res = least_squares(f, x0=70, bounds = ((0, 10**4)),args=(g1,g0,mt,Nt,Int))
-#     # print(Int,res.x,i)
-#     # dt=res.x
-#     dt = fsolve(f, x0=60, args=(g1, g0, mt_perc, Nt, Int, time))
-#     tt = time + dt
-#     try:
-#         X = m0 / (N0 - m0) * np.exp(Int * (1 / g1) * (np.exp(g1 * tt) - 1)) * np.exp((g1 - g0) * tt)
-#         F = X / (X + 1)
-#     except OverflowError:
-#         F = 1
-#     # return (m0)*math.exp(g1*tt)#/(m0*math.exp(g1*tt)+(N0-m0)*math.exp(g0*tt)*(math.exp(-Int*m0*math.exp(g1*tt)+1)))
-#     return F
-#
-#
-# def f(t, g1, g0, mt_perc, Nt, Int, time):
-#     try:
-#         ff = 16 - np.exp(g1 * t) - (Nt - mt_perc) * np.exp(g0 * t) * (
-#                     np.exp(-(Int / g1) * np.exp(g1 * time) * (np.exp(g1 * t) - 1)) - np.exp((g1 - g0) * t))
-#     except OverflowError:
-#         ff = float(60)
-#         print(Int, mt)
-#     return ff
-#
-#
-# time = np.zeros([100])
-# fit = np.zeros([100])
-#
-# mt_perc = m0
-# for i in range(25):
-#     Nt = 1
-#     print(time[i])
-#     time[i + 1] = time[i] + fsolve(f, x0=60, args=(g1, g0, mt_perc, Nt, Int, time[i]))
-#     fit[i+1]=func(i,g1,0,mt_perc,Nt,time[i])
-#     # print('function',1 if pd.isna(func(i,Int,mt,Nt,time[I,i])) else func(i,Int,mt,Nt,time[I,i]) )
-#     mt_perc= fit[i]
-#
-#
-# import matplotlib.pyplot as plt
-#
-# plt.plot(fit[:25],':',label='model')
-# print(fit[:25])
-#
-# NumberOfSpecies = 10 ** 4
-#
-# X_X = np.load('sample.npy')
-#
-# generations=np.where((X_X.sum(axis=1))>0)
-#
-# gen_num=generations[0][-1]
-# print(gen_num)
-#
-# ratio=[X_X[i,:int(NumberOfSpecies/100)].sum(axis=0)/(X_X[i,:].sum(axis=0)) for i in range(gen_num+1)]
-# #plt.plot(ratio,'o')
-# ##plt.xlabel('generation')
-# ##plt.ylabel('ratio')
-# #plt.show()
-#
-# plt.plot(ratio[::4],'o',label='simulations')
-# plt.xlabel('# passaging')
-# plt.ylabel('ratio')
-# plt.legend()
-# plt.show()
+    :return:
+        """
+
+    Int_opt = np.zeros(8)
+    alpha_opt = np.zeros(8)
+
+    np.seterr(divide='ignore', invalid='ignore')
+
+    mutant_percent=0.01
+    m0=mutant_percent
+    g1 = (math.log(2) / 16)-(-math.log(0.9791) / 16)
+    g0 = (math.log(2) / 16)-(-math.log(0.8) / 16)
+    N0 = 1
+
+    Int=0 #no interactions
+    alpha=1 #no plating efficiency
+
+
+    def func(i, g1, Int, mt_perc, Nt, time):
+        # res = least_squares(f, x0=70, bounds = ((0, 10**4)),args=(g1,g0,mt,Nt,Int))
+        # print(Int,res.x,i)
+        # dt=res.x
+        dt = fsolve(f, x0=60, args=(g1, g0, mt_perc, Nt, Int, time))
+        tt = time + dt
+        try:
+            X = m0 / (N0 - m0) * np.exp(Int * (1 / g1) * (np.exp(g1 * tt) - 1)) * np.exp((g1 - g0) * tt)
+            F = X / (X + 1)
+        except OverflowError:
+            F = 1
+        # return (m0)*math.exp(g1*tt)#/(m0*math.exp(g1*tt)+(N0-m0)*math.exp(g0*tt)*(math.exp(-Int*m0*math.exp(g1*tt)+1)))
+        return F
+
+
+    def f(t, g1, g0, mt_perc, Nt, Int, time):
+        try:
+            ff = 16 - np.exp(g1 * t) - (Nt - mt_perc) * np.exp(g0 * t) * (
+                        np.exp(-(Int / g1) * np.exp(g1 * time) * (np.exp(g1 * t) - 1)) - np.exp((g1 - g0) * t))
+        except OverflowError:
+            ff = float(60)
+            print(Int, mt)
+        return ff
+
+
+    time = np.zeros([100])
+    fit = np.zeros([100])
+
+    mt_perc = m0
+    for i in range(25):
+        Nt = 1
+        print(time[i])
+        time[i + 1] = time[i] + fsolve(f, x0=60, args=(g1, g0, mt_perc, Nt, Int, time[i]))
+        fit[i+1]=func(i,g1,0,mt_perc,Nt,time[i])
+        # print('function',1 if pd.isna(func(i,Int,mt,Nt,time[I,i])) else func(i,Int,mt,Nt,time[I,i]) )
+        mt_perc= fit[i]
+
+
+    import matplotlib.pyplot as plt
+
+    plt.plot(fit[:25],':',label='model')
+    print(fit[:25])
+
+    NumberOfSpecies = 10 ** 4
+
+    X_X = np.load('sample.npy')
+
+    generations=np.where((X_X.sum(axis=1))>0)
+
+    gen_num=generations[0][-1]
+
+    ratio=[X_X[i,:int(NumberOfSpecies/100)].sum(axis=0)/(X_X[i,:].sum(axis=0)) for i in range(gen_num+1)]
+
+    plt.plot(ratio[::4],'o',label='simulations')
+    plt.xlabel('# passaging')
+    plt.ylabel('ratio')
+    plt.legend()
+    plt.show()
 
