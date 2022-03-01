@@ -153,11 +153,3 @@ class Analysis(Model):
         print(stats.ks_2samp(Data1, Data2))
 
         pass
-
-
-
-
-
-
-
-#
