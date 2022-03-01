@@ -2,7 +2,7 @@ import math
 import numpy as np
 import random
 
-from clones_dynamic_functions import Model
+from clones_dynamic_functions import *
 from analysis import Analysis
 
 # model = Model(number_of_species=10**3, mutant_percent=0.1, number_of_mutations=2,
@@ -14,6 +14,8 @@ from analysis import Analysis
 # X_X=model.time_propagation(number_of_steps=10**5)
 
 X_X = np.load('sample.npy')
+
+mean_field()
 
 analysis = Analysis(X_X=X_X,number_of_species=100, mutant_percent=0.1)
 
