@@ -3,7 +3,10 @@
 /shelf/
 /workspace.xml
 
+# REsULTS 
 sample.npy
+*.npy
+*.pdf
 
 
 .idea/**
