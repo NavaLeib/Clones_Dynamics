@@ -3,6 +3,11 @@
 /shelf/
 /workspace.xml
 
+<<<<<<< HEAD
+=======
+# REsULTS 
+sample.npy
+>>>>>>> cdf566a3b2688fce56b2a0d7b6554a4272dcd4f9
 *.npy
 *.pdf
 

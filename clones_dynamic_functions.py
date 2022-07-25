@@ -233,10 +233,14 @@ class Model:
             #     break
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             if int(t / (passaging*24)) == 11:  # no more than 10 passaging to keep
 =======
             if int(t / (passaging*24)) == 10:  # no more than 10 passaging to keep
 >>>>>>> bc0deba... Add Passaging by %Y and Days
+=======
+            if int(t / (passaging*24)) == 10:  # no more than 10 passaging to keep
+>>>>>>> cdf566a3b2688fce56b2a0d7b6554a4272dcd4f9
                 break
 
         print('saving data')

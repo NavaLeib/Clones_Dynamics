@@ -161,10 +161,14 @@ class Analysis(Model):
         pass
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     def figure_hist_many_mutants_all_pass(self, number_of_mutations, generations_to_plot,percent_of_pass,initial_mean_clone_size, cells):
 =======
     def figure_hist_many_mutants_all_pass(self, number_of_mutations,generations_to_plot):
 >>>>>>> bc0deba... Add Passaging by %Y and Days
+=======
+    def figure_hist_many_mutants_all_pass(self, number_of_mutations,generations_to_plot):
+>>>>>>> cdf566a3b2688fce56b2a0d7b6554a4272dcd4f9
         """
         generate from data stacked histogram for different generation
         :argument:
@@ -173,6 +177,7 @@ class Analysis(Model):
         :return:
         """
 
+<<<<<<< HEAD
 <<<<<<< HEAD
         ratio = []
         for mut in range(number_of_mutations):
@@ -225,6 +230,8 @@ class Analysis(Model):
                 a, k1, k2 = params
                 yPred = (1 - a) * k1 * np.exp(-k1 * y) + a * k2 * np.exp(-k2 * y)
 =======
+=======
+>>>>>>> cdf566a3b2688fce56b2a0d7b6554a4272dcd4f9
         ratio=[]
         for mut in range(number_of_mutations):
             ratio.append([self.X_X[i, int(mut * self.number_of_species * self.mutant_percent):
@@ -275,13 +282,17 @@ class Analysis(Model):
                 y= np.array(args,dtype=float)
                 a, k1, k2 = params
                 yPred = (1-a)*k1*np.exp(-k1*y) + a*k2*np.exp(-k2*y)
+<<<<<<< HEAD
 >>>>>>> bc0deba... Add Passaging by %Y and Days
+=======
+>>>>>>> cdf566a3b2688fce56b2a0d7b6554a4272dcd4f9
                 negLL = -np.sum(np.log(yPred))
                 return negLL
 
             y = counts
             import scipy.optimize
             from scipy.optimize import minimize
+<<<<<<< HEAD
 <<<<<<< HEAD
             bnd = ((0, 1), (10 ** 2, 10 ** 5), (10 ** 2, 10 ** 5))
             guess = np.array([1, 1000, 1000])
@@ -299,6 +310,8 @@ class Analysis(Model):
             plt.setp(axs[i, j].get_xticklabels(), fontsize=10)
             plt.setp(axs[i, j].get_yticklabels(), fontsize=10)
 =======
+=======
+>>>>>>> cdf566a3b2688fce56b2a0d7b6554a4272dcd4f9
             bnd = ((0, 1), (10**2,10**5), (10**2, 10**5))
             guess=np.array([1,1000,1000])
             results = scipy.optimize.minimize(MLE, guess, args=Data,bounds=bnd,method= 'L-BFGS-B')
@@ -314,7 +327,10 @@ class Analysis(Model):
             plt.legend(loc='best')
             plt.setp(axs[i,j].get_xticklabels(),fontsize=10)
             plt.setp(axs[i,j].get_yticklabels(),fontsize=10)
+<<<<<<< HEAD
 >>>>>>> bc0deba... Add Passaging by %Y and Days
+=======
+>>>>>>> cdf566a3b2688fce56b2a0d7b6554a4272dcd4f9
 
             gen2 = gen_num
             Data1 = self.X_X[1, :] / (self.X_X[1, :].sum())
@@ -322,6 +338,7 @@ class Analysis(Model):
             Data2 = self.X_X[gen2, :] / (self.X_X[gen2, :].sum())
             Data2 = Data2[Data2 > 0]
 
+<<<<<<< HEAD
 <<<<<<< HEAD
             #(ks, p) = stats.ks_2samp(Data1, Data2)
 
@@ -363,6 +380,8 @@ class Analysis(Model):
 
     def figure_number_clones(self, passaging, initial_mean_clone_size, percent_of_pass, cells):
 =======
+=======
+>>>>>>> cdf566a3b2688fce56b2a0d7b6554a4272dcd4f9
             (ks,p)=stats.ks_2samp(Data1, Data2)
 
             axs[i, j].set_title('H0: PDF(gen=1) = PDF (gen='+str(gen2)+'); p_value = ' +str(p))
@@ -379,7 +398,10 @@ class Analysis(Model):
         pass
 
     def figure_number_clones(self, passaging, initial_mean_clone_size):
+<<<<<<< HEAD
 >>>>>>> bc0deba... Add Passaging by %Y and Days
+=======
+>>>>>>> cdf566a3b2688fce56b2a0d7b6554a4272dcd4f9
         """
         generate from data plot the number of clones in each passaging
         :param passaging: int
@@ -387,6 +409,7 @@ class Analysis(Model):
         """
         num_non_zero = [((self.X_X[i, :])!=0).sum(axis=0) for i in range(self.gen_num + 1)]
         print(num_non_zero)
+<<<<<<< HEAD
 <<<<<<< HEAD
         plt.plot(num_non_zero[::passaging], 'o', label = str(percent_of_pass) )
         plt.xlabel('# passaging')
@@ -400,6 +423,8 @@ class Analysis(Model):
         plt.savefig('figure_number_clones_' + 'cells' + str(cells)+ '_init clone size' +
                   str(initial_mean_clone_size)+ '_passaging' + str(passaging) + '_Vary_PercentY.pdf')
 =======
+=======
+>>>>>>> cdf566a3b2688fce56b2a0d7b6554a4272dcd4f9
         plt.plot(num_non_zero[::passaging], 'o', label = str(initial_mean_clone_size) )
         plt.xlabel('# passaging')
         plt.legend()
@@ -408,5 +433,8 @@ class Analysis(Model):
         #plt.show()
         print('figure_number_clones_init_cells_per_clone' + str(initial_mean_clone_size) + '.pdf')
         plt.savefig('figure_number_clones_init_cells_per_clone' + str(initial_mean_clone_size) + '.pdf')
+<<<<<<< HEAD
 >>>>>>> bc0deba... Add Passaging by %Y and Days
+=======
+>>>>>>> cdf566a3b2688fce56b2a0d7b6554a4272dcd4f9
         pass
