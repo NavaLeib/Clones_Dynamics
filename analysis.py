@@ -191,7 +191,7 @@ class Analysis(Model):
 
             min_data = min(Data)
             max_data = max(Data)
-            print(min_data,max_data)
+            #print(min_data,max_data)
 
             bins = 10 ** (np.arange(np.log10(min_data), np.log10(max_data), 0.1))
             counts, bins, bars = axs[i, j].hist([Data[:int(self.number_of_species * self.mutant_percent / 2)],
@@ -231,17 +231,19 @@ class Analysis(Model):
             import scipy.optimize
             from scipy.optimize import minimize
 
-            bnd = ((0, 1), (10**2,10**5), (10**2, 10**5))
-            guess=np.array([1,1000,1000])
-            results = scipy.optimize.minimize(MLE, guess, args=Data,bounds=bnd,method= 'L-BFGS-B')
+            bnd = ((0, 1), (10**2,10**6), (10**2, 10**6))
+            guess=np.array([1,10**3,1000])
+            results = scipy.optimize.minimize(MLE, guess, args=Data,bounds=bnd,method= 'L-BFGS-B', tol=10**-30)
 
-            print(results.x) # This contains your three best fit parameters
+            #print(results.x) # This contains your three best fit parameters
             a, k1, k2 = results.x
             curvey = (1-a)*k1*np.exp(-k1*x) + a*k2*np.exp(-k2*x) # This is your y axis fit-line
 
+            #print('a,k1,k2=',results.x)
+
             axs[i,j].plot(x, curvey,color='darkorange')
             axs[i,j].scatter(x,y,color='black')
-            axs[i,j].set_ylim(10**(-2),10**(5))
+            axs[i,j].set_ylim(10**(-2),10**(6))
             axs[i,j].set_xlim(bins[0], 10**(-2.5))
             plt.legend(loc='best')
             plt.setp(axs[i,j].get_xticklabels(),fontsize=10)
@@ -260,10 +262,14 @@ class Analysis(Model):
             #                     f"$\\bf{1,12,17,20}$: " + str(round(ratio[0][gen_num], 2)) + "; $\\bf{1q}$: "
             #                     + str(round(ratio[1][gen_num], 2)))
 
-            P = ss.expon.fit(Data2)
-            rX = np.linspace(min(Data2), max(Data2), 1000)
-            rP = ss.expon.cdf(rX, *P)
-            (ks,p) = stats.kstest(Data2,rP,N=10**5)
+            P = ss.expon.fit(Data2, floc=0)
+            rX = np.linspace(min(Data2), max(Data2), len(y))
+            rP = ss.expon.pdf(rX, *P)
+            (ks,p) = stats.kstest(Data2,rP,N=10**6)
+
+            loc, scale  = ss.expon.fit(Data2, floc=0)
+            y_exp = np.exp(-x / scale) / scale
+
             axs[i, j].set_title(
                 #'H0: PDF (day=' + str(gen2) + ') = exp. dist; p_value = ' + f"{Decimal(str(p)):.3E} \n " +
                 'PDF (day=' + str(gen2) + ')\n   ' + f"$\\bf{1, 12, 17, 20}$: " + str(round(ratio[0][gen_num], 2)) + "; $\\bf{1q}$: " +
@@ -273,7 +279,13 @@ class Analysis(Model):
 
             #print('between two fitting curves', stats.ks_2samp(rP, curvey), 'gen=', gen2)
 
-            print('between two fit exp curve to data ', (ks,p), 'gen=', gen2)
+            #print('between two fit exp curve to data ', (ks,p), 'gen=', gen2)
+            #print(bic(y,curvey,3),bic(y,y_exp,1))
+            # print(curvey)
+            # print(rP)
+            print('between two fit exp curve to data ', (bic(y,curvey,3)-bic(y,y_exp,1))/3, 'gen=', gen2)
+
+
 
         plt.gca().legend(('_nolegend_', '_nolegend_', '_nolegend_', '1,12,17,20', '1q', 'normal'), fontsize=10)
         plt.suptitle('percent_of_pass=' +str(percent_of_pass) + '; initial_mean_clone_size=' +str(initial_mean_clone_size)
@@ -287,8 +299,16 @@ class Analysis(Model):
                             hspace=0.4)
 
         plt.show()
-        plt.savefig('figure_hist_many_mutants' +'percent_of_pass' +str(percent_of_pass) + '_initial_mean_clone_size' +str(initial_mean_clone_size)
-                     + '_cells'  +str(cells)+ '_day5.pdf')
+        # plt.savefig('figure_hist_many_mutants' +'percent_of_pass' +str(percent_of_pass) + '_initial_mean_clone_size' +str(initial_mean_clone_size)
+        #              + '_cells'  +str(cells)+ '_day5.pdf')
+
+        fig, axs = plt.subplots(1, 1)
+        axs.plot(x,curvey)
+        axs.plot(x,y_exp)
+        axs.plot(x,y,'o')
+        axs.set_yscale('log')
+        axs.set_xscale('log')
+        plt.show()
 
         pass
 
@@ -335,3 +355,36 @@ class Analysis(Model):
 
 
         pass
+
+
+def bic(y, y_pred, p):
+    """
+    Returns the BIC score of a model.
+    :input:
+    y: the measured data
+    y_pred: predicted values of y;  the fitted curve
+    p: number of variables used for prediction in the model.
+
+    :output:
+    score: BIC score
+    """
+
+    # Length exception
+    if not len(y) == len(y_pred):
+        raise TypeError("Equal length of observed and predicted values expected.")
+    else:
+        n = len(y)
+
+    # Score
+
+    ### if the errors are Gaussian distributed:
+    residual = np.subtract(y_pred, y)
+    SSE = np.sum(np.power(residual, 2))
+    BIC = n * np.log(SSE / n) + p * np.log(n)
+
+    ### unknown distribution of errorsL
+    #max_L = ?
+    #BIC = - 2 * np.log(max_L) + p * np.log(n)
+
+
+    return BIC

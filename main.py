@@ -6,7 +6,7 @@ from clones_dynamic_functions import *
 from analysis import Analysis
 
 
-for cells in [10 ** 5]:#[10**4, 10 ** 5,10**6]:
+for cells in [10 ** 5]:#[10**4, 10 ** 5,10**6]
 
     for m in [10]:# [10, 10 ** 2, 10 ** 3]: #mean initial clone size
 
